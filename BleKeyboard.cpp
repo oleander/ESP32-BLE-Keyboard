@@ -122,7 +122,7 @@ void BleKeyboard::begin(void)
 
 #if defined(USE_NIMBLE)
 
-  BLEDevice::setSecurityAuth(true, true, true);
+  BLEDevice::setSecurityAuth(true, false, false);
 
 #else
 
