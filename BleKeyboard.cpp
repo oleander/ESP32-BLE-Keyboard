@@ -122,7 +122,7 @@ void BleKeyboard::begin(void)
 
 #if defined(USE_NIMBLE)
 
-  BLEDevice::setSecurityAuth(true, false, false);
+  BLEDevice::setSecurityAuth(true, true, false);
 
 #else
 
@@ -511,7 +511,7 @@ void BleKeyboard::onConnect(BLEServer* pServer) {
 
 #endif // !USE_NIMBLE
 
-  pServer.getAdvertising()->start();
+  pServer->getAdvertising()->start();
 }
 
 void BleKeyboard::onDisconnect(BLEServer* pServer) {
@@ -527,7 +527,7 @@ void BleKeyboard::onDisconnect(BLEServer* pServer) {
   advertising->start();
 
 #endif // !USE_NIMBLE
-  pServer.getAdvertising()->start();
+  pServer->getAdvertising()->start();
 }
 
 void BleKeyboard::onWrite(BLECharacteristic* me) {
