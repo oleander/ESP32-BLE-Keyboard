@@ -223,7 +223,7 @@ void BleKeyboard::setBatteryLevel(uint8_t level) {
     this->hid->setBatteryLevel(this->batteryLevel);
 }
 
-void BleKeyboard::whenClientConnects(void (*func)(BLEClient client)) {
+void BleKeyboard::whenClientConnects(void (*func)(BLEClient *client)) {
   this->_clientConnectCallback = func;
 }
 

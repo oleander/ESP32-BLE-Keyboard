@@ -145,7 +145,7 @@ private:
   SemaphoreHandle_t connectionSemaphore;
   // A callback that takes a newly connected client after the client is passed
   // to onAuthenticationComplete
-  void (*_clientConnectCallback)(NimBLEClient client);
+  void (*_clientConnectCallback)(NimBLEClient *client);
   uint8_t batteryLevel;
   bool connected = false;
   uint32_t _delay_ms = 7;
