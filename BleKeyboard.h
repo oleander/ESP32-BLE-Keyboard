@@ -176,7 +176,7 @@ public:
   void setName(std::string deviceName);
   void setDelay(uint32_t ms);
   void broadcast(void);
-  void whenClientConnects(void (*func)(NimBLEClient client));
+  void whenClientConnects(void (*func)(NimBLEClient *client));
   void set_vendor_id(uint16_t vid);
   void set_product_id(uint16_t pid);
   void set_version(uint16_t version);

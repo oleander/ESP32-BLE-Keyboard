@@ -206,7 +206,7 @@ void BleKeyboard::begin(NimBLEAddress *target) {
   advertising->setAppearance(HID_KEYBOARD);
   advertising->addServiceUUID(hid->hidService()->getUUID());
   advertising->setScanResponse(false);
-  advertising->start(0, nullptr, target, true);
+  advertising->start(0, nullptr, target);
 
   hid->setBatteryLevel(batteryLevel);
 
@@ -568,6 +568,7 @@ void BleKeyboard::onConnect(BLEServer *pServer) {
 
 #endif // !USE_NIMBLE
 
+  // TODO: Remove
   pServer->getAdvertising()->start();
 }
 
@@ -586,6 +587,7 @@ void BleKeyboard::onDisconnect(BLEServer *pServer) {
   advertising->start();
 
 #endif // !USE_NIMBLE
+  // TODO: Remove
   pServer->getAdvertising()->start();
 }
 
