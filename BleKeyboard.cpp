@@ -168,7 +168,7 @@ void onStoppedAdv(NimBLEAdvertising *pAdv) {
   ESP_LOGD(LOG_TAG, "Advertising stopped!");
 }
 
-void BleKeyboard::begin(NimBLEAddress *target = nullptr) {
+void BleKeyboard::begin(NimBLEAddress *target) {
   BLEDevice::init(deviceName);
   BLEServer *pServer = BLEDevice::createServer();
   pServer->setCallbacks(this);
