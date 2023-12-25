@@ -168,7 +168,7 @@ void onStoppedAdv(NimBLEAdvertising *pAdv) {
   ESP_LOGD(LOG_TAG, "Advertising stopped!");
 }
 
-void BleKeyboard::begin(NimBLEAddress *target = nullptr) {
+void BleKeyboard::begin(NimBLEAddress *target) {
   BLEDevice::init(deviceName);
   BLEServer *pServer = BLEDevice::createServer();
   pServer->setCallbacks(this);
@@ -206,7 +206,6 @@ void BleKeyboard::begin(NimBLEAddress *target = nullptr) {
   advertising->setAppearance(HID_KEYBOARD);
   advertising->addServiceUUID(hid->hidService()->getUUID());
   advertising->setScanResponse(false);
-  advertising->advertiseOnDisconnect(true);
   advertising->start(0, onStoppedAdv, target);
 
   hid->setBatteryLevel(batteryLevel);
