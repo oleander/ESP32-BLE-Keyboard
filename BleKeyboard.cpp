@@ -610,16 +610,16 @@ void BleKeyboard::delay_ms(uint64_t ms) {
     while (esp_timer_get_time() < e) {
     }
   }
+}
 
-  void BleKeyboard::onAuthenticationComplete(ble_gap_conn_desc * desc) {
-    ESP_LOGD(LOG_TAG, "onAuthenticationComplete");
+void BleKeyboard::onAuthenticationComplete(ble_gap_conn_desc *desc) {
+  ESP_LOGD(LOG_TAG, "onAuthenticationComplete");
 
-    auto client = BLEDevice::getClientByID(desc->conn_handle);
+  auto client = BLEDevice::getClientByID(desc->conn_handle);
 
-    if (client) {
-      _clientConnectCallback(client);
-    } else {
-      ESP_LOGE(LOG_TAG, "No client found for connection");
-    }
+  if (client) {
+    _clientConnectCallback(client);
+  } else {
+    ESP_LOGE(LOG_TAG, "No client found for connection");
   }
 }
