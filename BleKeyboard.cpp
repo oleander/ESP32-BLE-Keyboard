@@ -518,15 +518,7 @@ void BleKeyboard::onDisconnect(BLEServer *pServer) {
   pServer->getAdvertising()->start();
 }
 
-void BleKeyboard::broadcast(void) {
-  this->pServer->isConnected();
-  auto adv = this->pServer->getAdvertising();
-
-  if (adv->isAdvertising())
-    return;
-
-  adv->start();
-}
+void BleKeyboard::broadcast(void) { this->hid->startServices(); }
 
 void BleKeyboard::onWrite(BLECharacteristic *me) {
   uint8_t *value = (uint8_t *)(me->getValue().c_str());
