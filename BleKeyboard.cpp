@@ -139,7 +139,21 @@ void BleKeyboard::begin(void)
   advertising = pServer->getAdvertising();
   advertising->setAppearance(HID_KEYBOARD);
   advertising->addServiceUUID(hid->hidService()->getUUID());
-  advertising->setScanResponse(false);
+
+  ble_addr_t blead;
+  int rc;
+
+  rc = ble_hs_id_gen_rnd(1, &blead);
+
+  if (rc != 0)
+    ESP_LOGD(LOG_TAG, "Rand failed");
+
+  rc = ble_hs_id_set_rnd(blead.val);
+
+  if (rc != 0)
+   ESP_LOGD(LOG_TAG, "Addr failed");
+
+  advertising->setScanResponse(true);
   advertising->start();
   hid->setBatteryLevel(batteryLevel);
 
