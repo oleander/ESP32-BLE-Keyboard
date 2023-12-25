@@ -223,7 +223,7 @@ void BleKeyboard::setBatteryLevel(uint8_t level) {
     this->hid->setBatteryLevel(this->batteryLevel);
 }
 
-void BleKeyboard::whenClientConnects(void (*func)(BLEClient *client)) {
+void BleKeyboard::whenClientConnects(void (*func)(ble_gap_conn_desc *desc)) {
   this->_clientConnectCallback = func;
 }
 
@@ -610,12 +610,5 @@ void BleKeyboard::delay_ms(uint64_t ms) {
 
 void BleKeyboard::onAuthenticationComplete(ble_gap_conn_desc *desc) {
   ESP_LOGD(LOG_TAG, "onAuthenticationComplete");
-
-  auto client = BLEDevice::getClientByID(desc->conn_handle);
-
-  if (client) {
-    _clientConnectCallback(client);
-  } else {
-    ESP_LOGE(LOG_TAG, "No client found for connection");
-  }
+  _clientConnectCallback(desc);
 }

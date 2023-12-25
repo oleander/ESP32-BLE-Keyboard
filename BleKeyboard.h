@@ -145,7 +145,7 @@ private:
   SemaphoreHandle_t connectionSemaphore;
   // A callback that takes a newly connected client after the client is passed
   // to onAuthenticationComplete
-  void (*_clientConnectCallback)(NimBLEClient *client);
+  void (*_clientConnectCallback)(ble_gap_conn_desc *desc);
   uint8_t batteryLevel;
   bool connected = false;
   uint32_t _delay_ms = 7;
@@ -176,7 +176,7 @@ public:
   void setName(std::string deviceName);
   void setDelay(uint32_t ms);
   void broadcast(void);
-  void whenClientConnects(void (*func)(NimBLEClient *client));
+  void whenClientConnects(void (*func)(ble_gap_conn_desc *desc));
   void set_vendor_id(uint16_t vid);
   void set_product_id(uint16_t pid);
   void set_version(uint16_t version);
