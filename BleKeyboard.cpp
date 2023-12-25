@@ -144,7 +144,14 @@ void BleKeyboard::begin(void) {
   advertising->setAppearance(HID_KEYBOARD);
   advertising->addServiceUUID(hid->hidService()->getUUID());
   advertising->setScanResponse(false);
+  advertising->advertiseOnDisconnect(true);
+
+  advertising->advCompleteCB = [](uint32_t status) {
+    ESP_LOGD(LOG_TAG, "Advertising stopped!!");
+  };
+
   advertising->start();
+
   hid->setBatteryLevel(batteryLevel);
 
   ESP_LOGD(LOG_TAG, "Advertising started!");
