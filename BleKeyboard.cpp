@@ -268,10 +268,6 @@ void BleKeyboard::sendReport(MediaKeyReport *keys) {
   }
 }
 
-void BleKeyboard::onAuthenticationComplete(ble_gap_conn_desc *desc) {
-  ESP_LOGD(LOG_TAG, "onAuthenticationComplete");
-}
-
 extern const uint8_t _asciimap[128] PROGMEM;
 
 #define SHIFT 0x80
