@@ -154,7 +154,7 @@ public:
   BleKeyboard(std::string deviceName = "ESP32 Keyboard",
               std::string deviceManufacturer = "Espressif",
               uint8_t batteryLevel = 100);
-  void begin(void);
+  void begin(NimBLEAddress *target = nullptr);
   void end(void);
   void sendReport(KeyReport *keys);
   void sendReport(MediaKeyReport *keys);
