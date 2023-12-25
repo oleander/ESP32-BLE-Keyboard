@@ -21,8 +21,8 @@
 
 #else
 
-#include "BLEHIDDevice.h"
 #include "BLECharacteristic.h"
+#include "BLEHIDDevice.h"
 
 #endif // USE_NIMBLE
 
@@ -110,25 +110,27 @@ const MediaKeyReport KEY_MEDIA_EJECT = {16, 0};
 const MediaKeyReport KEY_MEDIA_VOLUME_UP = {32, 0};
 const MediaKeyReport KEY_MEDIA_VOLUME_DOWN = {64, 0};
 const MediaKeyReport KEY_MEDIA_WWW_HOME = {128, 0};
-const MediaKeyReport KEY_MEDIA_LOCAL_MACHINE_BROWSER = {0, 1}; // Opens "My Computer" on Windows
+const MediaKeyReport KEY_MEDIA_LOCAL_MACHINE_BROWSER = {
+    0, 1}; // Opens "My Computer" on Windows
 const MediaKeyReport KEY_MEDIA_CALCULATOR = {0, 2};
 const MediaKeyReport KEY_MEDIA_WWW_BOOKMARKS = {0, 4};
 const MediaKeyReport KEY_MEDIA_WWW_SEARCH = {0, 8};
 const MediaKeyReport KEY_MEDIA_WWW_STOP = {0, 16};
 const MediaKeyReport KEY_MEDIA_WWW_BACK = {0, 32};
-const MediaKeyReport KEY_MEDIA_CONSUMER_CONTROL_CONFIGURATION = {0, 64}; // Media Selection
+const MediaKeyReport KEY_MEDIA_CONSUMER_CONTROL_CONFIGURATION = {
+    0, 64}; // Media Selection
 const MediaKeyReport KEY_MEDIA_EMAIL_READER = {0, 128};
 
 //  Low level key report: up to 6 keys and shift, ctrl etc at once
-typedef struct
-{
+typedef struct {
   uint8_t modifiers;
   uint8_t reserved;
   uint8_t keys[6];
 } KeyReport;
 
-class BleKeyboard : public Print, public BLEServerCallbacks, public BLECharacteristicCallbacks
-{
+class BleKeyboard : public Print,
+                    public BLEServerCallbacks,
+                    public BLECharacteristicCallbacks {
 private:
   BLEHIDDevice *hid;
   BLECharacteristic *inputKeyboard;
@@ -149,7 +151,9 @@ private:
   uint16_t version = 0x0210;
 
 public:
-  BleKeyboard(std::string deviceName = "ESP32 Keyboard", std::string deviceManufacturer = "Espressif", uint8_t batteryLevel = 100);
+  BleKeyboard(std::string deviceName = "ESP32 Keyboard",
+              std::string deviceManufacturer = "Espressif",
+              uint8_t batteryLevel = 100);
   void begin(void);
   void end(void);
   void sendReport(KeyReport *keys);
@@ -166,6 +170,7 @@ public:
   void setBatteryLevel(uint8_t level);
   void setName(std::string deviceName);
   void setDelay(uint32_t ms);
+  void broadcast(void);
 
   void set_vendor_id(uint16_t vid);
   void set_product_id(uint16_t pid);
