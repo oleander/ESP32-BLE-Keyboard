@@ -141,6 +141,10 @@ private:
   MediaKeyReport _mediaKeyReport;
   std::string deviceName;
   std::string deviceManufacturer;
+  SemaphoreHandle_t connectionSemaphore;
+  // A callback that takes a newly connected client after the client is passed
+  // to onAuthenticationComplete
+  void (*_clientConnectCallback)(BLEClient client);
   uint8_t batteryLevel;
   bool connected = false;
   uint32_t _delay_ms = 7;
@@ -171,12 +175,13 @@ public:
   void setName(std::string deviceName);
   void setDelay(uint32_t ms);
   void broadcast(void);
-
+  void whenClientConnects(void (*func)(BLEClient client));
   void set_vendor_id(uint16_t vid);
   void set_product_id(uint16_t pid);
   void set_version(uint16_t version);
 
 protected:
+  virtual void onAuthenticationComplete(ble_gap_conn_desc *desc) override;
   virtual void onStarted(BLEServer *pServer){};
   virtual void onConnect(BLEServer *pServer) override;
   virtual void onDisconnect(BLEServer *pServer) override;

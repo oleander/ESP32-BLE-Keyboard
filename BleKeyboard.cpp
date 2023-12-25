@@ -158,15 +158,15 @@ static const uint8_t _hidReportDescriptor[] = {
     END_COLLECTION(0) // END_COLLECTION
 };
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
+
 BleKeyboard::BleKeyboard(std::string deviceName, std::string deviceManufacturer,
                          uint8_t batteryLevel)
     : hid(0), deviceName(std::string(deviceName).substr(0, 15)),
       deviceManufacturer(std::string(deviceManufacturer).substr(0, 15)),
-      batteryLevel(batteryLevel) {}
-
-void onStoppedAdv(NimBLEAdvertising *pAdv) {
-  ESP_LOGD(LOG_TAG, "Advertising stopped!");
-}
+      batteryLevel(batteryLevel),
+      connectionSemaphore(xSemaphoreCreateBinary()) {}
 
 void BleKeyboard::begin(NimBLEAddress *target) {
   BLEDevice::init(deviceName);
@@ -206,7 +206,7 @@ void BleKeyboard::begin(NimBLEAddress *target) {
   advertising->setAppearance(HID_KEYBOARD);
   advertising->addServiceUUID(hid->hidService()->getUUID());
   advertising->setScanResponse(false);
-  advertising->start(0, onStoppedAdv, target);
+  advertising->start(0, nullptr, target, true);
 
   hid->setBatteryLevel(batteryLevel);
 
@@ -223,14 +223,18 @@ void BleKeyboard::setBatteryLevel(uint8_t level) {
     this->hid->setBatteryLevel(this->batteryLevel);
 }
 
+void BleKeyboard::whenClientConnects(void (*func)(BLEClient client)) {
+  this->_clientConnectCallback = func;
+}
+
 // must be called before begin in order to set the name
 void BleKeyboard::setName(std::string deviceName) {
   this->deviceName = deviceName;
 }
 
 /**
- * @brief Sets the waiting time (in milliseconds) between multiple keystrokes in
- * NimBLE mode.
+ * @brief Sets the waiting time (in milliseconds) between multiple keystrokes
+ * in NimBLE mode.
  *
  * @param ms Time in milliseconds
  */
@@ -262,6 +266,10 @@ void BleKeyboard::sendReport(MediaKeyReport *keys) {
     this->delay_ms(_delay_ms);
 #endif // USE_NIMBLE
   }
+}
+
+void BleKeyboard::onAuthenticationComplete(ble_gap_conn_desc *desc) {
+  ESP_LOGD(LOG_TAG, "onAuthenticationComplete");
 }
 
 extern const uint8_t _asciimap[128] PROGMEM;
@@ -598,6 +606,18 @@ void BleKeyboard::delay_ms(uint64_t ms) {
       }
     }
     while (esp_timer_get_time() < e) {
+    }
+  }
+
+  void BleKeyboard::onAuthenticationComplete(ble_gap_conn_desc * desc) {
+    ESP_LOGD(LOG_TAG, "onAuthenticationComplete");
+
+    auto client = BLEDevice::getClientByID(desc->conn_handle);
+
+    if (client) {
+      _clientConnectCallback(client);
+    } else {
+      ESP_LOGE(LOG_TAG, "No client found for connection");
     }
   }
 }
