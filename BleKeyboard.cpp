@@ -227,6 +227,10 @@ void BleKeyboard::whenClientConnects(void (*func)(ble_gap_conn_desc *desc)) {
   this->_clientConnectCallback = func;
 }
 
+void BleKeyboard::whenClientDisconnects(void (*func)(BLEServer *server)) {
+  this->_clientDisconnectCallback = func;
+}
+
 // must be called before begin in order to set the name
 void BleKeyboard::setName(std::string deviceName) {
   this->deviceName = deviceName;
@@ -563,13 +567,12 @@ void BleKeyboard::onConnect(BLEServer *pServer) {
   desc->setNotifications(true);
 
 #endif // !USE_NIMBLE
-
-  // TODO: Remove
-  pServer->getAdvertising()->start();
 }
 
 void BleKeyboard::onDisconnect(BLEServer *pServer) {
   this->connected = false;
+  if (this->_clientDisconnectCallback)
+    this->_clientDisconnectCallback(pServer);
 
 #if !defined(USE_NIMBLE)
 
@@ -583,8 +586,6 @@ void BleKeyboard::onDisconnect(BLEServer *pServer) {
   advertising->start();
 
 #endif // !USE_NIMBLE
-  // TODO: Remove
-  pServer->getAdvertising()->start();
 }
 
 void BleKeyboard::broadcast(void) { this->hid->startServices(); }
@@ -610,5 +611,6 @@ void BleKeyboard::delay_ms(uint64_t ms) {
 
 void BleKeyboard::onAuthenticationComplete(ble_gap_conn_desc *desc) {
   ESP_LOGD(LOG_TAG, "onAuthenticationComplete");
-  _clientConnectCallback(desc);
+  if (this->_clientConnectCallback)
+    this->_clientConnectCallback(desc);
 }

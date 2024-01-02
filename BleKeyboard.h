@@ -146,6 +146,7 @@ private:
   // A callback that takes a newly connected client after the client is passed
   // to onAuthenticationComplete
   void (*_clientConnectCallback)(ble_gap_conn_desc *desc);
+  void (*_clientDisconnectCallback)(BLEServer *server);
   uint8_t batteryLevel;
   bool connected = false;
   uint32_t _delay_ms = 7;
@@ -177,6 +178,7 @@ public:
   void setDelay(uint32_t ms);
   void broadcast(void);
   void whenClientConnects(void (*func)(ble_gap_conn_desc *desc));
+  void whenClientDisconnects(void (*func)(BLEServer *server));
   void set_vendor_id(uint16_t vid);
   void set_product_id(uint16_t pid);
   void set_version(uint16_t version);
